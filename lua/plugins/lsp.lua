@@ -21,7 +21,7 @@ return {
         config = function()
             require("mason-lspconfig").setup({
                 ensure_installed = {
-                    "ts_ls",
+                    "tsserver",
                     "html",
                     "cssls",
                     "tailwindcss",
@@ -83,12 +83,6 @@ return {
                     opts.desc = "Show line diagnostics"
                     keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts)
 
-                    opts.desc = "Go to previous diagnostic"
-                    keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
-
-                    opts.desc = "Go to next diagnostic"
-                    keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
-
                     opts.desc = "Show documentation for what is under cursor"
                     keymap.set("n", "K", vim.lsp.buf.hover, opts)
 
@@ -97,121 +91,34 @@ return {
                 end,
             })
 
-            local capabilities = cmp_nvim_lsp.default_capabilities()
-
             local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
-            for type, icon in pairs(signs) do
-                local hl = "DiagnosticSign" .. type
-                vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
-            end
+            local severity = vim.diagnostic.severity
+            vim.diagnostic.config({
+                virtual_text = true,
+                signs = {
+                    text = {
+                        [severity.ERROR] = signs.Error,
+                        [severity.WARN] = signs.Warn,
+                        [severity.INFO] = signs.Info,
+                        [severity.HINT] = signs.Hint
+                    }
+                }
+            })
 
             mason_lspconfig.setup_handlers({
-                function(server_name)
-                    lspconfig[server_name].setup({
+                -- Will be called for each installed server that doesn't have
+                -- a dedicated handler.
+                --
+                function(server_name) -- default handler (optional)
+                    -- https://github.com/neovim/nvim-lspconfig/pull/3232
+                    if server_name == "tsserver" then
+                        server_name = "ts_ls"
+                    end
+                    local capabilities = cmp_nvim_lsp.default_capabilities()
+                    require("lspconfig")[server_name].setup({
                         capabilities = capabilities,
                     })
                 end,
-                ["html"] = function()
-                    lspconfig["html"].setup({
-                        capabilities = capabilities,
-                    })
-                end,
-                ["ts_ls"] = function()
-                    lspconfig["ts_ls"].setup({
-                        capabilities = capabilities,
-                    })
-                end,
-                ["tailwindcss"] = function()
-                    lspconfig["tailwindcss"].setup({
-                        capabilities = capabilities,
-                    })
-                end,
-                ["cssls"] = function()
-                    lspconfig["cssls"].setup({
-                        capabilities = capabilities,
-                        settings = {
-                            css = {
-                                validate = true,
-                                lint = {
-                                    unknownAtRules = "ignore"
-                                }
-                            }
-                        },
-                        scss = {
-                            validate = true,
-                            lint = {
-                                unknownAtRules = "ignore"
-                            }
-                        },
-                        less = {
-                            validate = true,
-                            lint = {
-                                unknownAtRules = "ignore"
-                            }
-
-                        }
-                    })
-                end,
-                ["emmet_ls"] = function()
-                    lspconfig["emmet_ls"].setup({
-                        capabilities = capabilities,
-                        filetypes = {
-                            "html",
-                            "typescriptreact",
-                            "javascriptreact",
-                            "css",
-                            "sass",
-                            "scss",
-                        },
-                    })
-                end,
-                ["kotlin_language_server"] = function()
-                    lspconfig["kotlin_language_server"].setup({
-                        capabilities = capabilities,
-                    })
-                end,
-                ["clangd"] = function()
-                    lspconfig["clangd"].setup({
-                        capabilities = capabilities,
-                    })
-                end,
-                -- ["denols"] = function()
-                --     lspconfig["denols"].setup({
-                --         capabilities = capabilities
-                --     })
-                -- end,
-                ["lua_ls"] = function()
-                    -- configure lua server (with special settings)
-                    lspconfig["lua_ls"].setup({
-                        capabilities = capabilities,
-                        settings = {
-                            Lua = {
-                                diagnostics = {
-                                    globals = { "vim" },
-                                },
-                                completion = {
-                                    callSnippet = "Replace",
-                                },
-                                workspace = {
-                                    library = {
-                                        [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-                                        [vim.fn.stdpath("config") .. "/lua"] = true,
-                                    },
-                                },
-                                hint = { enable = true },
-                            },
-                        },
-                    })
-                end,
-                -- ["jdtls"] = function()
-                -- 	lspconfig["jdtls"].setup({
-                -- 		capabilities = capabilities,
-                -- 		-- handlers = {
-                -- 		-- 	["language/status"] = function(_, result) end,
-                -- 		-- 	["$/progress"] = function(_, result, ctx) end,
-                -- 		-- },
-                -- 	})
-                -- end,
             })
         end,
     },

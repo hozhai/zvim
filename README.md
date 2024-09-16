@@ -8,3 +8,6 @@ Clone this repo into your Neovim configuration folder.
 cd ~/.config/nvim
 git clone https://github.com/Zhai90/zvim.git .
 ```
+
+### List of ideas:
+- https://github.com/tamton-aquib/staline.nvim

@@ -21,7 +21,7 @@ return {
         config = function()
             require("mason-lspconfig").setup({
                 ensure_installed = {
-                    "tsserver",
+                    "ts_ls",
                     "html",
                     "cssls",
                     "tailwindcss",
@@ -33,6 +33,7 @@ return {
                     "mdx_analyzer",
                     "markdown_oxide",
                     "jsonls"
+                    -- for java, see ftplugin/java.lua
                 },
                 automatic_installation = true,
             })
@@ -111,9 +112,6 @@ return {
                 --
                 function(server_name) -- default handler (optional)
                     -- https://github.com/neovim/nvim-lspconfig/pull/3232
-                    if server_name == "tsserver" then
-                        server_name = "ts_ls"
-                    end
                     local capabilities = cmp_nvim_lsp.default_capabilities()
                     require("lspconfig")[server_name].setup({
                         capabilities = capabilities,

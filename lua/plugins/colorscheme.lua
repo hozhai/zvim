@@ -1,12 +1,28 @@
 return {
     {
-        "dgox16/oldworld.nvim",
-        lazy = false,
+        "catppuccin/nvim",
+        name = "catppuccin",
         priority = 1000,
+        opts = {
+            flavour = "mocha",
+        },
         config = function()
-            vim.cmd.colorscheme("oldworld")
+            vim.cmd.colorscheme 'catppuccin'
+
+            vim.cmd([[
+                highlight! Pmenu guibg=#1E1E2E guifg=#D9E0EE
+                highlight! PmenuSel guibg=#555555 guifg=#ffffff
+            ]])
         end
     }
+    -- {
+    --     "dgox16/oldworld.nvim",
+    --     lazy = false,
+    --     priority = 1000,
+    --     config = function()
+    --         vim.cmd.colorscheme("oldworld")
+    --     end
+    -- }
     -- {
     --   'sainnhe/everforest',
     --   priority = 1000,

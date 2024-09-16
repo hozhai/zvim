@@ -22,23 +22,23 @@ return {
                 for _, client in pairs(clients) do
                     table.insert(c, client.name)
                 end
-                return " " .. table.concat(c, "|")
+                return " " .. table.concat(c, " - ")
             end
             require("lualine").setup({
                 options = {
                     theme = "auto",
                     component_separators = "",
-                    section_separators = { left = "", right = "" },
+                    section_separators = { left = "", right = "" },
                 },
                 sections = {
                     lualine_a = {
-                        { "mode", separator = { left = "", right = "" }, icon = "" },
+                        { "mode", separator = { left = "", right = "" }, icon = "" },
                     },
                     lualine_b = {
                         {
                             "filetype",
                             icon_only = true,
-                            padding = { left = 1, right = 1 },
+                            padding = { left = 1, right = 0 },
                         },
                         "filename",
                     },
@@ -50,7 +50,7 @@ return {
                         {
                             "diff",
                             symbols = { added = " ", modified = " ", removed = " " },
-                            colored = false,
+                            colored = true,
                         },
                     },
                     lualine_x = {
@@ -62,7 +62,7 @@ return {
                     },
                     lualine_y = { clients_lsp },
                     lualine_z = {
-                        { "location", separator = { left = "", right = "" }, icon = "" },
+                        { "location", separator = { left = "", right = "" }, icon = "" },
                     },
                 },
                 inactive_sections = {
@@ -73,7 +73,7 @@ return {
                     lualine_y = {},
                     lualine_z = { "location" },
                 },
-                extensions = { "toggleterm", "trouble" },
+                extensions = { "trouble" },
             })
         end,
     },

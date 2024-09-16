@@ -18,16 +18,16 @@ return {
             local luasnip = require("luasnip")
             require("luasnip.loaders.from_vscode").lazy_load()
 
-            local function tooBig(bufnr)
-                local max_filesize = 10 * 1024 -- 100KB
-                local check_stats = (vim.uv or vim.loop).fs_stat
-                local ok, stats = pcall(check_stats, vim.api.nvim_buf_get_name(bufnr))
-                if ok and stats and stats.size > max_filesize then
-                    return true
-                else
-                    return false
-                end
-            end
+            -- local function tooBig(bufnr)
+            --     local max_filesize = 10 * 1024 -- 100KB
+            --     local check_stats = (vim.uv or vim.loop).fs_stat
+            --     local ok, stats = pcall(check_stats, vim.api.nvim_buf_get_name(bufnr))
+            --     if ok and stats and stats.size > max_filesize then
+            --         return true
+            --     else
+            --         return false
+            --     end
+            -- end
 
             local preferred_sources = {
                 { name = "luasnip" },
@@ -41,9 +41,6 @@ return {
                 group = vim.api.nvim_create_augroup("CmpBufferDisableGrp", { clear = true }),
                 callback = function(ev)
                     local sources = preferred_sources
-                    if not (tooBig(ev.buf)) then
-                        sources[#sources + 1] = { name = "buffer", keyword_length = 4 }
-                    end
                     cmp.setup.buffer({
                         sources = cmp.config.sources(sources),
                     })
@@ -52,16 +49,14 @@ return {
 
             cmp.setup({
                 performance = {
-                    max_view_entries = 7
+                    max_view_entries = 7,
                 },
                 window = {
                     completion = {
-                        winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
-                        col_offset = -3,
-                        side_padding = 0,
+                        winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None,PmenuSel:PmenuSel",
                     },
                     documentation = {
-                        winhighlight = "Normal:CmpDocNormal,FloatBorder:CmpNormal",
+                        winhighlight = "Normal:CmpDocNormal,FloatBorder:CmpDocBorder",
                     },
                 },
                 completion = {
@@ -102,7 +97,6 @@ return {
                         { name = "nvim_lsp" },
                         { name = "nvim_lua" },
                         { name = "path" },
-                        { name = "buffer",  keyword_length = 4 }
                     }
                 ),
             })

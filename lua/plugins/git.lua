@@ -1,5 +1,12 @@
 return {
     {
+        'akinsho/git-conflict.nvim',
+        version = "*",
+        config = function()
+            require('git-conflict').setup()
+        end
+    },
+    {
         "lewis6991/gitsigns.nvim",
         event = "BufEnter",
         opts = {

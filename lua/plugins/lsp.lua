@@ -32,7 +32,8 @@ return {
                     "clangd",
                     "mdx_analyzer",
                     "markdown_oxide",
-                    "jsonls"
+                    "jsonls",
+                    "gopls"
                     -- for java, see ftplugin/java.lua
                 },
                 automatic_installation = true,
@@ -133,6 +134,7 @@ return {
                     javascriptreact = { "prettierd", "prettier" },
                     typescriptreact = { "prettierd", "prettier" },
                     rust = { "rustfmt" },
+                    go = { "gofmt" },
                     css = { "prettierd", "prettier" },
                     html = { "prettierd", "prettier" },
                     json = { "fixjson", "deno_fmt" },
